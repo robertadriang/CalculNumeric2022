@@ -25,6 +25,14 @@ def make_superior_triangular(matrix):
             matrix[i,j]=0
     return matrix
 
+
+def solve_triangular_system(matrix):
+    results=[matrix[-1][-1]/matrix[-1][-2]]
+    for i in range(len(matrix)-2,-1,-1):
+        results.insert(0,(matrix[i][-1]-sum(matrix[i][i+1:-1]*results))/matrix[i][i])
+    return results
+
+
 def g_e_p_p(n, eps, A, b):
     print("Matrix size:", n)
     print("Precision:", eps)
@@ -59,7 +67,8 @@ def g_e_p_p(n, eps, A, b):
         print("Matricea este singulara")
     else:
         A_b=make_superior_triangular(A_b)
-        print("tre sa mai citim :(")
+        solution=solve_triangular_system(A_b)
+        print("Solution of triangular system:",solution)
 
 
 if __name__ == '__main__':

@@ -23,21 +23,30 @@ def make_superior_triangular(matrix):
 
 
 def solve_triangular_system(matrix):
-    results = [matrix[-1][-1] / matrix[-1][-2]]
+    if abs(matrix[-1][-2]) > eps:
+        results = [matrix[-1][-1] / matrix[-1][-2]]
+    else:
+        print("Nu se poate face impartirea in solve_triangular_system")
+        exit()
+
     for i in range(len(matrix) - 2, -1, -1):
-        results.insert(0, (matrix[i][-1] - sum(matrix[i][i + 1:-1] * results)) / matrix[i][i])
+        if abs(matrix[i][i]) > eps:
+            results.insert(0, (matrix[i][-1] - sum(matrix[i][i + 1:-1] * results)) / matrix[i][i])
+        else:
+            print("Nu se poate face impartirea in solve_triangular_system")
+            exit()
     return results
 
 
 # Prima norma (pagina 1)
-def check_solution(A_init, b_init, solution, eps):
+def check_solution(A_init, b_init, solution):
     Ax = np.sum(A_init * solution, axis=1)
     Ax_b = Ax - b_init.flatten()
     return np.linalg.norm(Ax_b, 2) < eps
 
 
 # Urmatoarele 2 norme (pagina 1)
-def check_with_numpy(A_init, b_init, my_solution, eps):
+def check_with_numpy(A_init, b_init, my_solution):
     numpy_solution = np.linalg.solve(A_init, b_init.flatten())
     first_norm = np.linalg.norm(my_solution - numpy_solution, 2)
     A_inverse = np.linalg.inv(A_init)
@@ -49,7 +58,7 @@ def check_with_numpy(A_init, b_init, my_solution, eps):
 
 
 # Gauss extins pivotare partiala (primele 3 buline de pe pagina 1)
-def g_e_p_p(n, eps, A, b=None):
+def g_e_p_p(n, A, b=None):
     print("Functia gauss extins cu pivotare partiala")
     print("Matrix size:", n)
     print("Precision:", eps)
@@ -66,7 +75,11 @@ def g_e_p_p(n, eps, A, b=None):
 
     while l < n - 1 and abs(A_b[l, l]) > eps:
         for i in range(l + 1, n):
-            A_b[i, l] = A_b[i, l] / A_b[l, l]
+            if abs(A_b[l, l]) > eps:
+                A_b[i, l] = A_b[i, l] / A_b[l, l]
+            else:
+                print("Nu se poate face impartirea in g_e_p_p")
+                exit()
             for j in range(l + 1, n + 1):
                 A_b[i, j] = A_b[i, j] - A_b[i, l] * A_b[l, j]
         l += 1
@@ -80,8 +93,8 @@ def g_e_p_p(n, eps, A, b=None):
         A_b = make_superior_triangular(A_b)
         solution = solve_triangular_system(A_b)
         print("Solution of triangular system:", solution)
-        print("Este prima norma mai mica decat precizia:", check_solution(A, b, solution, eps))
-        print("Sunt urmatoarele 2 norme mai mici decat precizia:", check_with_numpy(A, b, solution, eps))
+        print("Este prima norma mai mica decat precizia:", check_solution(A, b, solution))
+        print("Sunt urmatoarele 2 norme mai mici decat precizia:", check_with_numpy(A, b, solution))
 
 
 def merge_matrixes(A, B):
@@ -92,7 +105,7 @@ def merge_matrixes(A, B):
 
 
 # Ultima norma de pe pagina 1
-def check_inverse(A, my_inverse, eps):
+def check_inverse(A, my_inverse):
     A_inverse = np.linalg.inv(A)
     norm = np.linalg.norm(my_inverse - A_inverse, 2)
     if norm < eps:
@@ -100,7 +113,7 @@ def check_inverse(A, my_inverse, eps):
     return False
 
 
-def compute_matrix_inverse(eps, A):
+def compute_matrix_inverse(A):
     rows = len(A)
     columns = len(A[0])
 
@@ -121,7 +134,11 @@ def compute_matrix_inverse(eps, A):
         A_extended = swap_lines(A_extended, l, line_to_swap)
     while l < rows - 1 and abs(A_extended[l, l]) > eps:
         for i in range(l + 1, rows):
-            A_extended[i, l] = A_extended[i, l] / A_extended[l, l]
+            if abs(A_extended[l, l]) > eps:
+                A_extended[i, l] = A_extended[i, l] / A_extended[l, l]
+            else:
+                print("Nu se poate face impartirea in compute_matrix_inverse")
+                exit()
             for j in range(l + 1, columns_extended):
                 A_extended[i, j] = A_extended[i, j] - A_extended[i, l] * A_extended[l, j]
         l += 1
@@ -144,13 +161,12 @@ def compute_matrix_inverse(eps, A):
         inverse = np.transpose(np.array(inverse))
         print("Inversa matricii A:", inverse)
         print("Este norma dintre matricea calculata si cea din numpy mai mica decat precizia:",
-              check_inverse(A, inverse, eps))
+              check_inverse(A, inverse))
 
 
 if __name__ == '__main__':
     print("Tema 2")
-    # define_parameters(3,10**-6,np.matrix([[1,-1,1],[-6,1,-1],[3,1,1]]),np.array([2,3,4]))
-    g_e_p_p(3, 10 ** -6, np.array([[2, 0, 1], [0, 2, 1], [4, 4, 6]]), np.array([[5], [1], [14]]))
-    # g_e_p_p(3, 10 ** -6, np.array([[2.0, 0.0, 1.0], [0.0, 2.0, 1.0], [4.0, 4.0, 6.0]]), np.array([[5.0], [1.0], [14.0]]))
-    # g_e_p_p(4, 10 ** -6, np.matrix([[0.02, 0.01, 0,0], [1, 2, 1,0], [0, 1, 2,1], [0, 0, 100, 200]]), np.array([[0.02], [1], [4],[800]]))
-    compute_matrix_inverse(10 ** -6, np.array([[2, 0, 1], [0, 2, 1], [4, 4, 6]]))
+    global eps
+    eps = 10 ** -6
+    g_e_p_p(3, np.array([[2, 0, 1], [0, 2, 1], [4, 4, 6]]), np.array([[5], [1], [14]]))
+    compute_matrix_inverse(np.array([[2, 0, 1], [0, 2, 1], [4, 4, 6]]))

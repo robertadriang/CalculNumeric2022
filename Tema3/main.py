@@ -8,14 +8,13 @@ def parse_file_to_structure(name):
     print(name)
     matrix_size = 0
 
-    data_regex = re.compile("\d*.?\d*, \d*, \d*")
+    data_regex = re.compile("-?\d*.?\d*, \d*, \d*")
     size_regex = re.compile("\d+")
 
     for line in open(name, 'r'):
         line = line.strip()
         # Daca e linie cu date de adaugat in matrice (ex. 506, 0, 0)
         if re.match(data_regex, line):
-            #### TODO aici vezi daca are prea multe decimale ce faci
             parsed_line = [float(x.strip()) for x in line.split(',')]
             parsed_line[1:] = [int(e) for e in parsed_line[1:]]
 
@@ -47,7 +46,6 @@ def parse_file_to_structure(name):
     # print(sum([len(e) for e in rare_matrix]))
     return rare_matrix
 
-#### TODO VEZI DACA NU E MAI BINE SA FACI SORTARE + CAUTARE BINARA
 def add_matrixes(A,B):
     A=copy.deepcopy(A)
     for l_index,line in enumerate(B):
@@ -74,7 +72,9 @@ def compare_two_matrixes(A, B):
             return False
     return True
 
-
+#[],[[2,0]] [[1,0]]
+# a+b
+# [...]
 def get_dot_product(a, b):
     a=[e for e in a]
     a=a+b

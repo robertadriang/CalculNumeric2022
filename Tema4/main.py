@@ -4,7 +4,6 @@ import copy
 import matplotlib.pyplot as plt
 
 
-############### NU MAI RETINEM DIAGONALA PRINCIPALA IN STRUCTURA RARA
 def check_precision(x, eps):
     if x < 0:
         if x > -eps:
@@ -15,6 +14,7 @@ def check_precision(x, eps):
     return x
 
 
+############### NU MAI RETINEM DIAGONALA PRINCIPALA IN STRUCTURA RARA
 def parse_file_to_structure(name):
     print(name)
     matrix_size = 0
@@ -78,13 +78,13 @@ def parse_result_vector(name):
 
 
 def solve_with_jacobi(matrix, matrix_diag, b, eps=10 ** -6):
-    x_step = [2 for _ in range(len(b))]
-    x_next_step = [0 for _ in range(len(b))]
+    x_step = [0 for _ in range(len(b))]
     delta_x = 1
     k_max = 10000
     k = 0
 
     while delta_x >= eps and k <= k_max and delta_x <= 10 ** 8:
+        x_next_step = [0 for _ in range(len(b))]
         for l_index, line in enumerate(matrix):
             for element in line:
                 x_next_step[l_index] += element[0] * x_step[element[1]]
@@ -106,6 +106,7 @@ def solve_with_jacobi(matrix, matrix_diag, b, eps=10 ** -6):
         print(k, delta_x)
         x_step = [e for e in x_next_step]
     else:
+        x_next_step = [0 for _ in range(len(b))]
         for l_index, line in enumerate(matrix):
             for element in line:
                 x_next_step[l_index] += element[0] * x_step[element[1]]
@@ -122,9 +123,9 @@ def solve_with_jacobi(matrix, matrix_diag, b, eps=10 ** -6):
         for i in range(len(delta_x_vector)):
             sum += delta_x_vector[i] * delta_x_vector[i]
 
-        delta_x = check_precision(sum ** (1 / 2), eps)
+        delta_x = sum ** (1 / 2)
         k += 1
-        print(delta_x)
+        print(k, delta_x)
         x_step = [e for e in x_next_step]
     if delta_x <= eps:
         print("Nr pasi efectuati:", k)
@@ -150,6 +151,7 @@ def get_dot_product(matrix_line, solution):
 
 
 def check_solution(A_triangle, A_diagonal, b, solution, eps):
+    # Adaugam diagonala principala la matricea rara
     A_triangle = copy.deepcopy(A_triangle)
     for index, element in enumerate(A_diagonal):
         A_triangle[index].append([element, index])
@@ -157,7 +159,8 @@ def check_solution(A_triangle, A_diagonal, b, solution, eps):
     A_x_vector = []
     for i in range(len(A_triangle)):
         if i % 1000 == 0:
-            print(i)
+            print(f"{i} termeni calculati pentru inmultirea A*x_aproximat")
+        # Luam integral linia curenta si cautam pe urmatoarele coloane termenii de pe acea linie
         line = [e for e in A_triangle[i]]
         line_from_column = []
         for index, l in enumerate(A_triangle[i + 1:]):
@@ -170,7 +173,7 @@ def check_solution(A_triangle, A_diagonal, b, solution, eps):
     difference_vector = []
     for i in range(len(A_x_vector)):
         difference_vector.append(A_x_vector[i] - b[i])
-    print("NORM INF:", np.linalg.norm(difference_vector, np.inf))
+    print("Norma INF:", np.linalg.norm(difference_vector, np.inf))
 
 
 ### TODO VEZI PRECIZIA
@@ -179,8 +182,8 @@ if __name__ == '__main__':
 
     #### 3 nu merge
     #### 4 nu merge
-    A_1, A_1_diag = parse_file_to_structure('a_3.txt')
-    b_1 = parse_result_vector('b_3.txt')
+    A_1, A_1_diag = parse_file_to_structure('a_1.txt')
+    b_1 = parse_result_vector('b_1.txt')
     for element in A_1_diag:
         if element == 0:
             print(A_1_diag)

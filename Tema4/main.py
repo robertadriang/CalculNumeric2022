@@ -182,8 +182,8 @@ if __name__ == '__main__':
 
     #### 3 nu merge
     #### 4 nu merge
-    A_1, A_1_diag = parse_file_to_structure('a_1.txt')
-    b_1 = parse_result_vector('b_1.txt')
+    A_1, A_1_diag = parse_file_to_structure('a_4.txt')
+    b_1 = parse_result_vector('b_4.txt')
     for element in A_1_diag:
         if element == 0:
             print(A_1_diag)

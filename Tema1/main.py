@@ -20,7 +20,7 @@ def custom_addition(u):
     b = u / 10
     c = u / 10
     print("(a+b)+c = ", (a + b) + c)
-    print("(a+b)+c = ", (a + (b + c)))
+    print("a+(b+c) = ", (a + (b + c)))
 
 
 def custom_product():
@@ -115,7 +115,7 @@ def ln_approximation(x):
 def sin_stats(x):
     library_result = math.sin(Decimal(math.pi * 1 / 4 * x))
     approximated_result = sinus_approximation(Decimal(x))
-    print(f"[SIN] Inpus argument: {x}")
+    print(f"[SIN] Input argument: {x}")
     print("[SIN]Result from library=", library_result)
     print("[SIN] Approximated result=", approximated_result)
     print("[SIN] Difference between results=", abs(Decimal(library_result) - approximated_result))
@@ -149,7 +149,7 @@ if __name__ == '__main__':
     custom_addition(u)
     custom_product()
     p = parse_file('date_T1.txt')
-    print(p)
+    #print(p)
 
     x = 0.66
     sin_stats(x)

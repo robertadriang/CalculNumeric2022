@@ -100,7 +100,7 @@ def g_e_p_p(n, A, b=None):
 def merge_matrixes(A, B):
     # Adaug cate o coloana din B pe rand in A
     for i in range(len(B[0])):
-        A = np.insert(A, len(A[0]), B[:, i], axis=1)w
+        A = np.insert(A, len(A[0]), B[:, i], axis=1)
     return A
 
 

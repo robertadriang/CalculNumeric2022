@@ -104,22 +104,38 @@ def test_function_b(start, end, nr_of_points, precision, function):
     computed_results = [function(e) for e in points]
     b,f=create_b_f(points,computed_results)
     a=np.linalg.solve(b,f)
-    print(a)
-    print(b)
-    print('NP value:',np.polyval(a,2))
-    print("Exact value:", f1(2))
-    # for value in points:
-    #     P_x=a[0]
-    #     for i in range(1,len(a)):
-    #         P_x=a[i]+P_x*value
-    #     print(f"P_x:{value}::::",P_x)
-    #     print("Exact value:",f1(value))
+    a=list(reversed(a))
+    test_points=generate_points_from_interval(start, end, nr_of_points*5)
+    sum_of_errors=0
+    calculated_results=[]
+    approximated_results=[]
+    for value in test_points:
+        P_x=a[0]
+        for i in range(1,len(a)):
+            P_x=a[i]+P_x*value
+        print("Value:",value)
+        print(f"P_x:",P_x)
+        calculated_value=function(value)
+        calculated_results.append(calculated_value)
+        approximated_results.append(P_x)
+        print("Exact value:",calculated_value)
+        error=abs(abs(P_x)-abs(calculated_value))
+        print("Error:",error)
+        sum_of_errors+=error
+
+    fig, ax = plt.subplots(2)
+    ax[0].plot(test_points, calculated_results)
+    ax[1].plot(test_points, approximated_results)
+    plt.show()
+
+    print("SUM OF ERRORS:",sum_of_errors)
+
 
 
 def create_b_f(x,y):
     f=[]
     for i in range(len(x)):
-       f.append(y[i]*(x[i]**i))
+       f.append(y[i])
 
     b=np.zeros([len(x),len(x)])
     for i in range(len(x)):

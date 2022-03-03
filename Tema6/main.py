@@ -74,87 +74,68 @@ def test_function(start, end, nr_of_points, precision, function):
     eps = 10 ** -precision
     points = generate_points_from_interval(start, end, nr_of_points)
     computed_results = [function(e) for e in points]
+    #create_b_f(points,computed_results)
+    #exit()
     # new_y = generate_aitken_schema(points, computed_results)
     # print("INITIAL:",new_y)
     new_y=generate_aitken_schema_vector(points,computed_results)
     approximated_results = []
-    for index, i in enumerate(points):
+    calculated_results=[]
+    test_points=generate_points_from_interval(start, end, nr_of_points*10)
+    for index, i in enumerate(test_points):
         print("x:", i)
         approximated = compute_L_polynom(i, points, new_y)
         approximated_results.append(approximated)
+        calculated_results.append(function(i))
         print("Aproximated:", approximated)
-        print("Function result:", computed_results[index])
-        print("Error:", abs(approximated - computed_results[index]))
+        print("Function result:", calculated_results[index])
+        print("Error:", abs(approximated - calculated_results[index]))
 
     fig, ax = plt.subplots(2)
-    ax[0].plot(points, computed_results)
-    ax[1].plot(points, approximated_results)
+    ax[0].plot(test_points, calculated_results)
+    ax[1].plot(test_points, approximated_results)
     plt.show()
 
+def test_function_b(start, end, nr_of_points, precision, function):
+    global decimals, eps
+    decimals = precision
+    eps = 10 ** -precision
+    points = generate_points_from_interval(start, end, nr_of_points)
+    computed_results = [function(e) for e in points]
+    b,f=create_b_f(points,computed_results)
+    a=np.linalg.solve(b,f)
+    print(a)
+    print(b)
+    print('NP value:',np.polyval(a,2))
+    print("Exact value:", f1(2))
+    # for value in points:
+    #     P_x=a[0]
+    #     for i in range(1,len(a)):
+    #         P_x=a[i]+P_x*value
+    #     print(f"P_x:{value}::::",P_x)
+    #     print("Exact value:",f1(value))
+
+
+def create_b_f(x,y):
+    f=[]
+    for i in range(len(x)):
+       f.append(y[i]*(x[i]**i))
+
+    b=np.zeros([len(x),len(x)])
+    for i in range(len(x)):
+        term=1.0
+        for j in range(len(x)):
+            b[i][j]=term
+            term*=x[i]
+
+    return b,f
 
 # utilizand forma Newton a polinomului de interpolare Lagrange ¸si schema
 # lui Aitken de calcul al diferent¸elor divizate; sa se afiseze Ln(¯x) si
 # |Ln(¯x) − f(¯x)|;
 if __name__ == '__main__':
     print("Tema 6")
-    #test_function(1.0,5.0,50,8,f1)
-    #test_function(0,1.5,30,6,f2)
-    test_function(0, 2, 50, 6, f3)
-
-    # precision = 6
-    # x_1_0 = 1
-    # x_1_n = 5
-    #
-    # points = generate_points_from_interval(x_1_0, x_1_n, 200, decimals=precision)
-    # # points = [1, 2, 3, 4, 5]
-    # results = [f1(e) for e in points]
-    # new_y = generate_aitken_schema(points, results, eps=10 ** -precision)
-    # computed_results = []
-    # approximated_results = []
-    # for i in points:
-    #     print("x:", i)
-    #     approximated = compute_L_polynom(i, points, new_y, eps=10 ** -precision)
-    #     approximated_results.append(approximated)
-    #     print("Aproximated:", approximated)
-    #     computed_results.append(f1(i))
-    #     print("Function result:", f1(i))
-    #     print("Error:", abs(approximated - f1(i)))
-    #
-    # fig, ax = plt.subplots(2)
-    # ax[0].plot(points, computed_results)
-    # ax[1].plot(points, approximated_results)
-    # plt.show()
-    x_2_0 = 0
-    x_2_n = 1.5
-    #
-    # print(f2(x_2_0))
-    # points = generate_points_from_interval(x_2_0, x_2_n, 100,decimals=precision)
-    # #points = [1, 2, 3, 4, 5]
-    # results = [f2(e) for e in points]
-    # new_y = generate_aitken_schema(points, results,eps=10**-precision)
-    # print(new_y)
-    #
-    #
-    # for i in points:
-    #     print("I:", i)
-    #     approximated= compute_L_polynom(i, points, new_y,eps=10**-precision)
-    #     print("Aproximated:",approximated)
-    #     print("Function result:", f2(i))
-    #     print("Error:", abs(approximated - f2(i)))
-
-    x_3_0 = 0
-    x_3_n = 2
-
-    # print(f3(x_3_0))
-    # points = generate_points_from_interval(x_3_0, x_3_n, 10)
-    # #points = [1, 2, 3, 4]
-    # results = [f3(e) for e in points]
-    #
-    # new_y = generate_aitken_schema(points, results)
-    # print(new_y)
-    #
-    # for i in points:
-    #     print("I:", i)
-    #     print("Aproximated:", compute_L_polynom(i, points, new_y))
-    #     print("Function result:", f3(i))
-    #     print("Error:", abs(compute_L_polynom(i, points, new_y) - f3(i)))
+    #test_function(1.0,5.0,30,8,f1)
+    #test_function(0,1.5,30,11,f2)
+    #test_function(0, 2, 50, 6, f3)
+    test_function_b(1.0, 5.0, 5, 8, f1)

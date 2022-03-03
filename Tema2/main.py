@@ -123,7 +123,7 @@ def compute_matrix_inverse(A):
     A_extended = merge_matrixes(A, identity_matrix)
     A_extended = A_extended.astype(np.float64)
 
-    print("Matricea A extinsa:", A_extended)
+    print("Matricea A extinsa:\n", A_extended)
     columns_extended = len(A_extended[0])
 
     # Am adaptat putin algorimul ca sa mearga si pt extins.
@@ -159,7 +159,7 @@ def compute_matrix_inverse(A):
 
         # Eu adaug coloanele ca linii intai de aia fac transpusa la final
         inverse = np.transpose(np.array(inverse))
-        print("Inversa matricii A:", inverse)
+        print("Inversa matricii A:\n", inverse)
         print("Este norma dintre matricea calculata si cea din numpy mai mica decat precizia:",
               check_inverse(A, inverse))
 

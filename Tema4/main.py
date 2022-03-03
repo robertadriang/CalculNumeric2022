@@ -26,7 +26,6 @@ def parse_file_to_structure(name):
         line = line.strip()
         # Daca e linie cu date de adaugat in matrice (ex. 506, 0, 0)
         if re.match(data_regex, line):
-            #### TODO aici vezi daca are prea multe decimale ce faci
             parsed_line = [float(x.strip()) for x in line.split(',')]
             parsed_line[1:] = [int(e) for e in parsed_line[1:]]
 
@@ -85,6 +84,7 @@ def solve_with_jacobi(matrix, matrix_diag, b, eps=10 ** -6):
 
     while delta_x >= eps and k <= k_max and delta_x <= 10 ** 8:
         x_next_step = [0 for _ in range(len(b))]
+        ### Se calculeaza x next step dupa formula eficienta pt matrici rare
         for l_index, line in enumerate(matrix):
             for element in line:
                 x_next_step[l_index] += element[0] * x_step[element[1]]
@@ -92,7 +92,7 @@ def solve_with_jacobi(matrix, matrix_diag, b, eps=10 ** -6):
 
         for i in range(len(x_step)):
             x_next_step[i] = (b[i] - x_next_step[i]) / matrix_diag[i]
-
+        #### Calculam delta
         delta_x_vector = []
         for i in range(len(x_next_step)):
             delta_x_vector.append(x_next_step[i] - x_step[i])
@@ -176,14 +176,12 @@ def check_solution(A_triangle, A_diagonal, b, solution, eps):
     print("Norma INF:", np.linalg.norm(difference_vector, np.inf))
 
 
-### TODO VEZI PRECIZIA
 if __name__ == '__main__':
     print("Tema 4")
 
-    #### 3 nu merge
-    #### 4 nu merge
-    A_1, A_1_diag = parse_file_to_structure('a_4.txt')
-    b_1 = parse_result_vector('b_4.txt')
+
+    A_1, A_1_diag = parse_file_to_structure('a_3.txt')
+    b_1 = parse_result_vector('b_3.txt')
     for element in A_1_diag:
         if element == 0:
             print(A_1_diag)

@@ -66,7 +66,6 @@ def add_matrixes(A,B):
 
 def compare_two_matrixes(A, B):
     for i in range(len(A)):
-        #### TODO vezi daca nu trebuie comparat termen cu termen
         if sorted(A[i])!=sorted(B[i]):
             print("The two matrixes are not equal")
             return False
@@ -147,4 +146,4 @@ if __name__ == '__main__':
             print(i)
         A_squared[i].sort(key=lambda e:e[1])
         A_ori_A_parsed[i].sort(key=lambda e:e[1])
-    compare_two_matrixes(A_squared, A_ori_A_parsed)
+    print("Are the two matrixes equal?:",compare_two_matrixes(A_squared, A_ori_A_parsed))

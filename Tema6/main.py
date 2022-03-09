@@ -38,7 +38,7 @@ def generate_aitken_schema(x, y):
     #print(aitken_schema)
     return np.insert(np.diagonal(aitken_schema, -1), 0, y[0])
 
-# Optimizare creier
+
 def generate_aitken_schema_vector(x, y):
     aitken_schema = np.zeros((len(x), len(y) - 1), dtype=float)
     aitken_vector=[e for e in y]
@@ -154,4 +154,4 @@ if __name__ == '__main__':
     #test_function(1.0,5.0,30,8,f1)
     #test_function(0,1.5,30,11,f2)
     #test_function(0, 2, 50, 6, f3)
-    test_function_b(1.0, 5.0, 5, 8, f1)
+    test_function_b(0, 2, 50, 6, f3)

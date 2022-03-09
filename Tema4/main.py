@@ -180,8 +180,8 @@ if __name__ == '__main__':
     print("Tema 4")
 
 
-    A_1, A_1_diag = parse_file_to_structure('a_3.txt')
-    b_1 = parse_result_vector('b_3.txt')
+    A_1, A_1_diag = parse_file_to_structure('a_1.txt')
+    b_1 = parse_result_vector('b_1.txt')
     for element in A_1_diag:
         if element == 0:
             print(A_1_diag)
